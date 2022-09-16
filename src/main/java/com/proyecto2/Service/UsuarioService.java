@@ -16,7 +16,7 @@ public class UsuarioService implements IUsuarioService{
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public void saveUser(UsuarioDTO usuarioDTO) throws ResourceAlreadyExistsException {
+    public Usuario saveUser(UsuarioDTO usuarioDTO) throws ResourceAlreadyExistsException {
         Usuario emailExistente = this.userRepository.findByEmail(usuarioDTO.getEmail());
         if(emailExistente != null && emailExistente.getEmail() != null && !emailExistente.getEmail().isEmpty()){
             throw new ResourceAlreadyExistsException("Email ya esta en uso");
@@ -30,7 +30,7 @@ public class UsuarioService implements IUsuarioService{
         user.setName(usuarioDTO.getUsername());
         user.setEmail(usuarioDTO.getEmail());
         user.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override

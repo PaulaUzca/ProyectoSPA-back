@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class PeliculaDTO {
     private Long id;
     @NotBlank
-    @Length(max = 100)
+    @Length(max = 300)
     private String titulo;
     private Integer estreno;
     @NotBlank

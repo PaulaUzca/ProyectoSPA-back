@@ -31,9 +31,9 @@ public class UsuarioController {
     }
 
     @PostMapping("/registro")
-    public ResponseEntity<Boolean> savePersona(@Valid @RequestBody UsuarioDTO usuarioDTO) throws ResourceAlreadyExistsException {
-        this.usuarioService.saveUser(usuarioDTO);
-        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+    public ResponseEntity<UsuarioDTO> savePersona(@Valid @RequestBody UsuarioDTO usuarioDTO) throws ResourceAlreadyExistsException {
+        Usuario usuario = this.usuarioService.saveUser(usuarioDTO);
+        return new ResponseEntity<>(new UsuarioDTO(usuario.getId(), usuario.getName(), usuario.getEmail(), null), HttpStatus.OK);
     }
 
     @PostMapping("/login")

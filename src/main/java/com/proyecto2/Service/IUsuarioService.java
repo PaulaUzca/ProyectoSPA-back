@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IUsuarioService {
 
-    void saveUser(UsuarioDTO usuarioDTO) throws ResourceAlreadyExistsException;
+    Usuario saveUser(UsuarioDTO usuarioDTO) throws ResourceAlreadyExistsException;
 
     Usuario logIn(UsuarioDTO usuarioDTO) throws ResourceNotFoundException;
 

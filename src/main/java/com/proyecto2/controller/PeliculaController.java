@@ -28,7 +28,6 @@ public class PeliculaController {
     private IPeliculaService peliculaService;
     @Autowired
     private IGeneroRepository generoRepository;
-    @Autowired
     private IPeliculaRepository peliculaRepository;
     /**
      * Obtener todos los generos de las peliculas
@@ -51,6 +50,7 @@ public class PeliculaController {
         newGenero.setNombre(genero.toUpperCase(Locale.ROOT));
         return new ResponseEntity<>(this.generoRepository.save(newGenero), HttpStatus.CREATED);
     }
+
 
     /**
      * Agregar una pelicula
@@ -102,7 +102,7 @@ public class PeliculaController {
      * Obtener una pelicula por su creador
      */
     @GetMapping("creador/id/{id}")
-    ResponseEntity<List<PeliculaDTO>> getAllPeliculasByCreador(@RequestParam(name="id", required = false) Long id){
+    ResponseEntity<List<PeliculaDTO>> getAllPeliculasByCreador(@PathVariable(name="id", required = false) Long id){
         List<Pelicula> peliculaList = this.peliculaRepository.findAllByIdCreador(id);
         if(peliculaList.isEmpty()){
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NO_CONTENT);
@@ -111,6 +111,15 @@ public class PeliculaController {
         return new ResponseEntity<>(peliculaDTOList, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    ResponseEntity<List<PeliculaDTO>> searchAllPeliculas(@RequestParam(name = "titulo") String titulo){
+        List<Pelicula> peliculaList = this.peliculaRepository.findAllLikeTitulo('%' + titulo.trim() + '%');
+        if(peliculaList.isEmpty()){
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NO_CONTENT);
+        }
+        List<PeliculaDTO> peliculaDTOList = peliculaList.stream().map(this::toPeliculaDTO).collect(Collectors.toList());
+        return new ResponseEntity<>(peliculaDTOList, HttpStatus.OK);
+    }
 
     // Un maper para pasar a PeliculaDTO
     private PeliculaDTO toPeliculaDTO(Pelicula film) {
@@ -126,4 +135,8 @@ public class PeliculaController {
             film.getCreador().getName());
     }
 
+    @Autowired
+    public void setPeliculaRepository(IPeliculaRepository peliculaRepository){
+        this.peliculaRepository = peliculaRepository;
+    }
 }
