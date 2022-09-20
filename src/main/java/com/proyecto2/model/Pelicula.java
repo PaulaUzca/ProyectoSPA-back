@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,6 +38,9 @@ public class Pelicula {
     @Column(name = "id_creador", nullable = false)
     private Long idCreador;
 
+    @Column(name = "stars")
+    private Float stars;
+
     @JsonIgnore
     @JoinColumn(name = "id_genero", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,4 +50,8 @@ public class Pelicula {
     @JoinColumn(name = "id_creador", insertable = false, updatable = false)
     @ManyToOne
     private Usuario creador;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pelicula", cascade = CascadeType.REMOVE)
+    private List<Like> likeList;
 }

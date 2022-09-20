@@ -5,8 +5,10 @@ import com.proyecto2.Service.IPeliculaService;
 import com.proyecto2.exception.ResourceAlreadyExistsException;
 import com.proyecto2.exception.ResourceNotFoundException;
 import com.proyecto2.model.Genero;
+import com.proyecto2.model.Like;
 import com.proyecto2.model.Pelicula;
 import com.proyecto2.repository.IGeneroRepository;
+import com.proyecto2.repository.ILikeRepository;
 import com.proyecto2.repository.IPeliculaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +32,9 @@ public class PeliculaController {
     @Autowired
     private IGeneroRepository generoRepository;
     private IPeliculaRepository peliculaRepository;
+
+    @Autowired
+    private ILikeRepository likeRepository;
     /**
      * Obtener todos los generos de las peliculas
      */
@@ -121,8 +127,26 @@ public class PeliculaController {
         return new ResponseEntity<>(peliculaDTOList, HttpStatus.OK);
     }
 
+
+    /** Get usuario liked muvis*/
+    @GetMapping("/usuarioLiked/{id}")
+    ResponseEntity<List<PeliculaDTO>> getLikedByUser(@PathVariable(name = "id") Long idUsuario){
+        List<Like> likeList = this.likeRepository.findAllByIdUsuario(idUsuario);
+        if(likeList.isEmpty()){
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NO_CONTENT);
+        }
+        List<PeliculaDTO> peliculaDTOList  = likeList.stream().map(p -> toPeliculaDTO(p.getPelicula())).collect(Collectors.toList());
+        return new ResponseEntity<>(peliculaDTOList, HttpStatus.OK);
+    }
+
     // Un maper para pasar a PeliculaDTO
-    private PeliculaDTO toPeliculaDTO(Pelicula film) {
+    public PeliculaDTO toPeliculaDTO(Pelicula film) {
+        Double avg = null;
+        DecimalFormat value = new DecimalFormat("#.#");
+
+        if(film.getLikeList() != null && !film.getLikeList().isEmpty()) {
+            avg = film.getLikeList().stream().map(Like::getHearts).mapToDouble(a -> a).average().getAsDouble();
+        }
     return new PeliculaDTO(
             film.getId(),
             film.getTitulo(),
@@ -132,7 +156,10 @@ public class PeliculaController {
             film.getIdGenero(),
             film.getGenero().getNombre(),
             film.getIdCreador(),
-            film.getCreador().getName());
+            film.getCreador().getName(),
+            film.getStars(),
+            film.getLikeList() != null && !film.getLikeList().isEmpty() ?  value.format(avg) : "0",
+            film.getLikeList() != null && !film.getLikeList().isEmpty()? film.getLikeList().size() : 0);
     }
 
     @Autowired

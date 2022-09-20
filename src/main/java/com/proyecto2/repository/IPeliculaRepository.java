@@ -14,7 +14,8 @@ public interface IPeliculaRepository extends JpaRepository<Pelicula, Long> {
      * Obtener las peliculas por genero, ... o no
      */
     @Query(value = "Select p from Pelicula p" +
-            " Where p.idGenero = :genero OR :genero IS NULL")
+            " Where p.idGenero = :genero OR :genero IS NULL" +
+            " ORDER BY p.id desc")
     List<Pelicula> findAllByGeneroOrNot(Long genero);
 
     List<Pelicula> findAllByIdCreador(Long idCreador);
@@ -23,4 +24,5 @@ public interface IPeliculaRepository extends JpaRepository<Pelicula, Long> {
             " Where ( UPPER(TRANSLATE( p.titulo, 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU'))  LIKE UPPER(TRANSLATE( :titulo, 'áéíóúÁÉÍÓÚ', 'aeiouAEIOU')))" +
             " Order by p.titulo")
     List<Pelicula> findAllLikeTitulo(String titulo);
+
 }

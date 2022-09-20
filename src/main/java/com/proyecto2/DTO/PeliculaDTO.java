@@ -31,4 +31,9 @@ public class PeliculaDTO {
     @NotNull
     private Long idCreador;
     private String nombreCreador;
+    @NotNull
+    private Float stars;
+
+    private String likeAverage;
+    private Integer likeAmount;
 }

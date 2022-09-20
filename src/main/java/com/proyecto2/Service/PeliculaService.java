@@ -32,6 +32,7 @@ public class PeliculaService implements IPeliculaService{
         pelicula.setImageURL(peliculaDTO.getImageURL());
         pelicula.setIdGenero(peliculaDTO.getIdGenero());
         pelicula.setIdCreador(peliculaDTO.getIdCreador());
+        pelicula.setStars(peliculaDTO.getStars());
         pelicula.setGenero(genero);
         pelicula.setCreador(usuario);
         return this.peliculaRepository.save(pelicula);
@@ -48,7 +49,7 @@ public class PeliculaService implements IPeliculaService{
         pelicula.setDescripcion(peliculaDTO.getDescripcion());
         pelicula.setImageURL(peliculaDTO.getImageURL());
         pelicula.setIdGenero(peliculaDTO.getIdGenero());
-        pelicula.setIdCreador(peliculaDTO.getIdCreador());
+        pelicula.setStars(peliculaDTO.getStars());
         pelicula.setGenero(genero);
         pelicula.setCreador(usuario);
         return this.peliculaRepository.save(pelicula);

@@ -1,10 +1,12 @@
 package com.proyecto2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -26,4 +28,7 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
+    private List<Like> likeList;
 }
